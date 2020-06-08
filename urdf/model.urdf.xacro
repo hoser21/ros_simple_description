@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+
+<robot name="simple4wd" 
+  xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find simple_description)/urdf/wheel.urdf.xacro" />
+
+  <!-- Constants -->
+  <xacro:property name="BASE_WIDTH" value="0.3"/> <!-- x -->
+  <xacro:property name="BASE_LENGTH" value="0.3"/> <!-- y -->
+  <xacro:property name="BASE_HEIGHT" value="0.05"/> <!-- z -->
+  <xacro:property name="BASE_MASS" value="4"/>
+
+  <xacro:property name="WHEEL_WIDTH" value="0.01"/>
+  <xacro:property name="WHEEL_RADIUS" value="0.03"/>
+  <xacro:property name="WHEEL_MASS" value="1"/>
+
+  <xacro:property name="PI" value="3.1415926535897931"/>
+
+  <!-- Materials -->
+  <material name="cyan">
+    <color rgba="0 1.0 1.0 1.0"/>
+  </material>
+
+  <!-- Used for fixing robot to Gazebo 'base_link' -->
+  <link name="world"/>
+
+  <joint name="fixed" type="fixed">
+    <parent link="world"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 ${BASE_HEIGHT/2 + WHEEL_RADIUS}" rpy="0 0 0" />
+  </joint>
+
+  <!-- Robot Base (front is facing positive x) -->
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="${BASE_WIDTH} ${BASE_LENGTH} ${BASE_HEIGHT}"/>
+      </geometry>
+      <material name="cyan"/>
+    </visual>
+
+    <collision>
+      <geometry>
+        <box size="${BASE_WIDTH} ${BASE_LENGTH} ${BASE_HEIGHT}"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="${BASE_MASS}"/>
+      <inertia
+        ixx="${BASE_MASS / 12.0 * (BASE_LENGTH * BASE_LENGTH + BASE_HEIGHT * BASE_HEIGHT)}" ixy="0" ixz="0"
+        iyy="${BASE_MASS / 12.0 * (BASE_WIDTH * BASE_WIDTH + BASE_HEIGHT * BASE_HEIGHT)}" iyz="0"
+        izz="${BASE_MASS / 12.0 * (BASE_WIDTH * BASE_WIDTH + BASE_LENGTH * BASE_LENGTH)}"
+      />
+    </inertial>
+  </link>
+
+  <!-- Wheels -->
+  <wheel 
+    name_link="front_left_wheel_link" parent_link="base_link"
+    mass="${WHEEL_MASS}" radius="${WHEEL_RADIUS}" width="${WHEEL_WIDTH}"
+    translate_x="${BASE_WIDTH/2 - 2*WHEEL_RADIUS}"
+    translate_y="${BASE_LENGTH/2 + WHEEL_WIDTH/2}"
+    translate_z="${-WHEEL_RADIUS}"
+  />
+
+  <wheel 
+    name_link="front_right_wheel_link" parent_link="base_link"
+    mass="${WHEEL_MASS}" radius="${WHEEL_RADIUS}" width="${WHEEL_WIDTH}"
+    translate_x="${BASE_WIDTH/2 - 2*WHEEL_RADIUS}"
+    translate_y="${-(BASE_LENGTH/2 + WHEEL_WIDTH/2)}"
+    translate_z="${-WHEEL_RADIUS}"
+  />
+
+  <wheel 
+    name_link="back_left_wheel_link" parent_link="base_link"
+    mass="${WHEEL_MASS}" radius="${WHEEL_RADIUS}" width="${WHEEL_WIDTH}"
+    translate_x="${-(BASE_WIDTH/2 - 2*WHEEL_RADIUS)}"
+    translate_y="${BASE_LENGTH/2 + WHEEL_WIDTH/2}"
+    translate_z="${-WHEEL_RADIUS}"
+  />
+
+  <wheel 
+    name_link="back_right_wheel_link" parent_link="base_link"
+    mass="${WHEEL_MASS}" radius="${WHEEL_RADIUS}" width="${WHEEL_WIDTH}"
+    translate_x="${-(BASE_WIDTH/2 - 2*WHEEL_RADIUS)}"
+    translate_y="${-(BASE_LENGTH/2 + WHEEL_WIDTH/2)}"
+    translate_z="${-WHEEL_RADIUS}"
+  />
+
+</robot>
