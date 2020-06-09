@@ -1,4 +1,4 @@
-# simple_description
+# ros_simple_description
 A ROS package to display a simple URDF robot model in rviz.
 
 ## Usage
